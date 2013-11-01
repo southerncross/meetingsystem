@@ -76,9 +76,13 @@ function getmeeting($conn, $filter) {
   $res['table']['data'] = array();
   $i = 0;
   foreach ($meeting as $m) {
+    if (array_key_exists($m['fieldID'], $field))
+      $fieldname = $field[$m['fieldID']];
+    else
+      $fieldname = "-";
     $res['table']['data'][$i] = array($m['id'],
 				      $m['description'], 
-				      $field[$m['fieldID']],
+				      $fieldname,
 				      $m['starttime'],
 				      $m['endtime']);
     $i++;
