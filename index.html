@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>签到查询系统</title>
+  </head>
+<script type="text/javascript" src="jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="jslib/ajaxcheck.js"></script>
+<script type="text/javascript" src="jslib/cookie.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $("#user").keyup(function() {
+	checkUserName($(this).val(), showInputHint);
+    });
+
+    document.getElementById("login").onclick = function() {
+	checkUserPassword($("#user").val(), $("#password").val(), login);
+    };
+});
+
+function showInputHint(res) {
+    if (!res)
+	document.getElementById("userhint").innerHTML = "未知错误，请稍后再试";
+    var r = JSON.parse(res);
+    document.getElementById("userhint").innerHTML = r.msg;
+}
+
+function login(res) {
+    if (!res) {
+	document.getElementById("loginhint").innerHTML = "未知错误，请稍后再试";
+	return;
+    }
+    var r = JSON.parse(res);
+    if (r.status != 0) {
+	document.getElementById("loginhint").innerHTML = r.msg;
+	document.getElementById("password").innerHTML = "";
+    }
+    else {
+	setCookie('userid', $("#user").val(), 1);
+	setCookie('username', r.msg, 1);
+	window.location.href="home.html";
+    }
+}
+
+</script>
+
+  <body>
+    <h1 align="center">签到查询系统</h1>
+    <form method="post" id="form">
+      <table>
+	<td>用户名</td>
+	<td><input type="text" name="user" id="user"/></td>
+	<td><div id="userhint"></div></td>
+	<tr />
+	<td>密码</td>
+	<td><input type="password" name="password" id="password"/></td>
+	<tr />
+	<!--提交按钮必须改成button，不能是submit，否则ajax来不及回调就直接跳转了-->
+	<td><input type="button" value="登录" id="login"/></td>
+      </table>
+    </form>
+    <p><div id="loginhint"></div></p>
+    <p>TODO: 增加过滤功能</p>
+    <p>TODO: 增加导出excel功能</p>
+  </body>
+</html>

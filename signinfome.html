@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="jquery/jquery-1.10.2.min.js"></script> 
+    <script type="text/javascript" src="jslib/ajaxtable.js"></script>
+    <script type="text/javascript" src="jslib/echotable.js"></script>
+    <script type="text/javascript">
+    var meetingFilter, personFilter;
+
+    $(document).ready(function() {
+	init();
+    });
+
+function getMeetingFilter() {
+    meetingFilter = new Array();
+    var i;
+    var POS = 5;
+    var table = document.getElementById("table");
+
+    for (i = 1; i < table.rows.length; i++) {
+	if (table.rows[i].cells[POS].innerHTML == "0")
+	    meetingFilter.push(table.rows[i].cells[0].innerHTML);
+    }
+    
+    // next step
+    cleanTable();
+    getSigninInfo();
+}
+
+function cleanTable() {
+    var table = document.getElementById("table");
+    while (table.rows.length > 0)
+	table.deleteRow(0);
+    table.style.display="none";
+}
+
+function getSigninInfo() {
+    personFilter = 1201211652;// TODO
+    var filter = {"meeting": meetingFilter, "person": personFilter};
+    getTable("signin_me", filter, echoResultTable);
+    document.getElementById("next").style.display="none";
+}
+
+function init() {
+    getTable("meeting", null, echoFilterTable);
+    document.getElementById("next").onclick = getMeetingFilter;
+    document.getElementById("next").style.display = "";
+}
+
+</script> 
+  </head>
+  
+  <body>
+    <p id="hint"></p>
+    <p id="test"></p>
+    <table id="table" class='tablesorter' border="1">
+    <!--别忘了thead和tbody!-->
+    </table>
+    <p><button id="next">next</button></p>
+  </body>
+</html>
